@@ -1,8 +1,8 @@
 
-/* =================================
+/* =====================================
    VIRTUAL EXHIBITION
    ROOM 01 - HATE SPEECH
-================================= */
+===================================== */
 
 * {
   margin: 0;
@@ -10,17 +10,17 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
   background: #171515;
   color: #fff;
   font-family: Arial, sans-serif;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
-
-/* 3D CANVAS */
 
 canvas {
   position: fixed;
@@ -35,71 +35,86 @@ canvas {
 #loading {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 30;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #171515;
-  color: #eee;
+  text-align: center;
   letter-spacing: 3px;
-  font-size: 14px;
 }
 
-/* INTRO SCREEN */
+#loading p {
+  margin-top: 15px;
+  color: #aaa;
+  font-size: 12px;
+}
+
+/* INTRO */
 
 #ui {
   position: fixed;
   inset: 0;
   z-index: 10;
-
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-
   text-align: center;
-
   background:
     linear-gradient(
-      rgba(15, 12, 12, 0.72),
-      rgba(15, 12, 12, 0.92)
+      rgba(10, 8, 8, .72),
+      rgba(10, 8, 8, .94)
     );
 }
 
+.intro-content {
+  padding: 25px;
+  max-width: 650px;
+}
+
+.intro-label,
+.info-label {
+  color: #d18b8b;
+  letter-spacing: 4px;
+  font-size: 11px;
+  margin-bottom: 25px;
+}
+
 #ui h1 {
-  font-size: clamp(32px, 7vw, 76px);
-  font-weight: 800;
-  letter-spacing: 8px;
-  color: #fff;
+  font-size: clamp(60px, 12vw, 110px);
+  line-height: .85;
+  letter-spacing: 7px;
+  font-weight: 900;
+}
+
+.intro-line {
+  width: 75px;
+  height: 4px;
+  background: #a52a32;
+  margin: 35px auto;
+}
+
+#ui h2 {
+  font-size: 19px;
   margin-bottom: 15px;
 }
 
 #ui p {
   font-size: 14px;
-  color: #c9c2bc;
-  line-height: 1.8;
-  letter-spacing: 1px;
-}
-
-#room-name {
-  color: #e1b5b5;
-  font-size: 17px;
-  letter-spacing: 4px;
-  margin: 30px 0;
+  color: #c7c0bc;
+  line-height: 2;
 }
 
 #start-button {
-  padding: 16px 42px;
-
-  border: 1px solid #a52a32;
+  margin-top: 35px;
+  padding: 17px 40px;
   background: #8f2028;
+  border: 1px solid #bd5960;
   color: white;
-
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 3px;
-
   cursor: pointer;
-  transition: 0.3s;
+  transition: .25s;
 }
 
 #start-button:hover {
@@ -107,90 +122,232 @@ canvas {
   transform: scale(1.04);
 }
 
+.intro-hint {
+  margin-top: 25px;
+  color: #888;
+  font-size: 10px;
+  letter-spacing: 3px;
+}
+
 /* CROSSHAIR */
 
 #crosshair {
   display: none;
-
   position: fixed;
   top: 50%;
   left: 50%;
-
   transform: translate(-50%, -50%);
-
   color: white;
   font-size: 22px;
-
   pointer-events: none;
-  z-index: 15;
-
+  z-index: 8;
   text-shadow: 0 0 5px black;
 }
 
-/* EXHIBITION INFORMATION */
+/* ROOM LABEL */
+
+#room-label {
+  display: none;
+  position: fixed;
+  top: 18px;
+  left: 20px;
+  z-index: 8;
+  padding: 10px 15px;
+  background: rgba(0,0,0,.55);
+  border-left: 3px solid #a52a32;
+  color: white;
+  font-size: 11px;
+  letter-spacing: 2px;
+  pointer-events: none;
+}
+
+/* INFORMATION WINDOW */
 
 #exhibition-info {
   display: none;
-
   position: fixed;
-  z-index: 18;
+  inset: 0;
+  z-index: 25;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0,0,0,.75);
+}
 
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  width: min(90%, 480px);
-
+.info-content {
+  width: min(100%, 480px);
   padding: 35px;
-
-  background: rgba(22, 19, 19, 0.96);
+  background: #211d1d;
   border: 1px solid #8f2028;
-
-  color: white;
   text-align: center;
 }
 
-#exhibition-info h2 {
-  color: #e7caca;
+.info-content h2 {
+  font-size: 30px;
   letter-spacing: 4px;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
-#exhibition-info p {
+.info-content p {
   color: #d0c9c5;
-  line-height: 1.9;
-  margin-bottom: 15px;
+  font-size: 14px;
+  line-height: 2;
+  margin-bottom: 18px;
 }
 
 #close-info {
   margin-top: 15px;
-  padding: 10px 30px;
-
-  background: #8f2028;
+  padding: 12px 35px;
   border: none;
+  background: #8f2028;
   color: white;
-
+  letter-spacing: 2px;
   cursor: pointer;
 }
 
-/* MOBILE */
+/* MOBILE CONTROLS */
 
-@media (max-width: 600px) {
+#mobile-controls {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 12;
+  pointer-events: none;
+  touch-action: none;
+}
 
-  #ui h1 {
-    letter-spacing: 4px;
+#look-zone {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  pointer-events: auto;
+  touch-action: none;
+}
+
+/* JOYSTICK */
+
+#joystick {
+  position: absolute;
+  left: 25px;
+  bottom: 30px;
+
+  width: 125px;
+  height: 125px;
+
+  border: 2px solid rgba(255,255,255,.55);
+  border-radius: 50%;
+
+  background: rgba(20,20,20,.4);
+
+  pointer-events: auto;
+  touch-action: none;
+  z-index: 3;
+}
+
+#joystick-knob {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: 52px;
+  height: 52px;
+
+  transform: translate(-50%, -50%);
+
+  border: 2px solid white;
+  border-radius: 50%;
+
+  background: rgba(143,32,40,.85);
+  pointer-events: none;
+}
+
+/* INTERACT */
+
+#interact-button {
+  position: absolute;
+  right: 25px;
+  bottom: 40px;
+
+  width: 68px;
+  height: 68px;
+
+  border-radius: 50%;
+  border: 2px solid white;
+
+  background: #8f2028;
+  color: white;
+
+  font-size: 22px;
+  font-weight: bold;
+
+  pointer-events: auto;
+  touch-action: none;
+  z-index: 4;
+}
+
+/* EXIT */
+
+#mobile-exit {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+
+  padding: 11px 20px;
+
+  border: 1px solid white;
+  background: rgba(0,0,0,.65);
+  color: white;
+
+  font-size: 11px;
+  letter-spacing: 2px;
+
+  pointer-events: auto;
+  z-index: 4;
+}
+
+/* TABLET */
+
+@media (min-width: 700px) {
+  #joystick {
+    width: 145px;
+    height: 145px;
+    left: 45px;
+    bottom: 45px;
   }
 
-  #ui p {
-    font-size: 12px;
+  #joystick-knob {
+    width: 60px;
+    height: 60px;
   }
 
-  #room-name {
-    font-size: 13px;
+  #interact-button {
+    width: 80px;
+    height: 80px;
+    right: 50px;
+    bottom: 55px;
+  }
+}
+
+/* LANDSCAPE */
+
+@media (max-height: 500px) {
+  #joystick {
+    width: 100px;
+    height: 100px;
+    bottom: 15px;
+    left: 20px;
   }
 
-  #start-button {
-    padding: 14px 28px;
+  #joystick-knob {
+    width: 42px;
+    height: 42px;
   }
 
+  #interact-button {
+    width: 58px;
+    height: 58px;
+    bottom: 20px;
+  }
 }
