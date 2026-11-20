@@ -3,87 +3,66 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#171515">
-  <title>HATE SPEECH | Virtual Exhibition</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#080808">
+  <title>HATE SPEECH — Virtual Exhibition</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
   <div id="loading">
-    <div>
-      <h2>VIRTUAL EXHIBITION</h2>
-      <p>กำลังเตรียมนิทรรศการ...</p>
-    </div>
+    <div class="loading-title">HATE SPEECH</div>
+    <div class="loading-text">กำลังเตรียมนิทรรศการ...</div>
   </div>
 
   <div id="ui">
     <div class="intro-content">
-      <div class="intro-label">VIRTUAL EXHIBITION · ROOM 01</div>
-
-      <h1>HATE<br>SPEECH</h1>
-
-      <div class="intro-line"></div>
-
-      <h2>นิทรรศการรู้เท่าทัน Hate Speech</h2>
-
-      <p>
-        สำรวจความหมาย ผลกระทบ และพลังของคำพูด<br>
-        ที่อาจเปลี่ยนแปลงชีวิตของใครบางคน
-      </p>
-
-      <button id="start-button">
-        ENTER EXHIBITION
-      </button>
-
-      <div class="intro-hint">
-        WASD / JOYSTICK TO MOVE
+      <div class="intro-small">VIRTUAL EXHIBITION</div>
+      <h1>HATE<br><span>SPEECH</span></h1>
+      <p>คำพูดที่อาจสร้างบาดแผลได้มากกว่าที่คิด</p>
+      <button id="start-button">ENTER EXHIBITION</button>
+      <div class="intro-instruction">
+        PC: WASD เพื่อเดิน · เมาส์เพื่อมอง · E เพื่อโต้ตอบ<br>
+        Mobile: ใช้จอยสติ๊กและลากหน้าจอเพื่อสำรวจ
       </div>
     </div>
   </div>
 
   <div id="crosshair">+</div>
 
-  <div id="room-label">
-    ROOM 01 — HATE SPEECH
-  </div>
+  <div id="room-label">ROOM 01 — HATE SPEECH</div>
 
+  <!-- Mobile Controls -->
   <div id="mobile-controls">
 
-    <div id="joystick">
-      <div id="joystick-knob"></div>
+    <div id="joystick-zone">
+      <div id="joystick-base">
+        <div id="joystick-stick"></div>
+      </div>
     </div>
 
     <div id="look-zone"></div>
 
-    <button id="interact-button">E</button>
+    <div id="mobile-buttons">
+      <button id="interact-button">E</button>
+      <button id="exit-button">EXIT</button>
+    </div>
 
-    <button id="mobile-exit">EXIT</button>
-
+    <div id="touch-hint">ลากเพื่อเดินและมองรอบตัว</div>
   </div>
 
+  <!-- Exhibition Information -->
   <div id="exhibition-info">
-    <div class="info-content">
-      <div class="info-label">EXHIBITION · ROOM 01</div>
-      <h2>HATE SPEECH</h2>
-
-      <p>
-        Hate Speech คือการสื่อสารที่แสดงความเกลียดชัง
-        ดูถูก หรือสร้างความเป็นปฏิปักษ์ต่อบุคคลหรือกลุ่มบุคคล
-        โดยมักเกี่ยวข้องกับอัตลักษณ์หรือคุณลักษณะของบุคคล
+    <div class="info-panel">
+      <button id="close-info">✕</button>
+      <div class="info-tag">EXHIBITION INFORMATION</div>
+      <h2 id="info-title">HATE SPEECH</h2>
+      <p id="info-description">
+        ข้อมูลนิทรรศการ
       </p>
-
-      <p>
-        คำพูดหนึ่งคำอาจส่งผลกระทบมากกว่าที่เราคิด
-        การสื่อสารอย่างเคารพจึงเป็นจุดเริ่มต้นของสังคมที่ดี
-      </p>
-
-      <button id="close-info">CLOSE</button>
     </div>
   </div>
 
   <script type="module" src="js/main.js"></script>
-
 </body>
 </html>
