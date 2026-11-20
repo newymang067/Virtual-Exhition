@@ -1,13 +1,16 @@
 
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
 
-// =====================================
-// ROOM 01 : HATE SPEECH EXHIBITION
-// =====================================
+// ==========================================
+// ROOM 01 - HATE SPEECH
+// VIRTUAL EXHIBITION
+// ==========================================
+
+// SCENE
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x242020);
-scene.fog = new THREE.Fog(0x242020, 16, 35);
+scene.fog = new THREE.Fog(0x242020, 18, 35);
 
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -17,31 +20,36 @@ const camera = new THREE.PerspectiveCamera(
 );
 
 camera.position.set(0, 1.65, 6.5);
+camera.rotation.order = 'YXZ';
+
+// RENDERER
 
 const renderer = new THREE.WebGLRenderer({
   antialias: true
 });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
+
 document.body.appendChild(renderer.domElement);
 
-// =====================================
+// ==========================================
 // MATERIALS
-// =====================================
+// ==========================================
 
 const white = new THREE.MeshStandardMaterial({
   color: 0xd8d3ce,
-  roughness: 0.85
+  roughness: 0.9
 });
 
 const black = new THREE.MeshStandardMaterial({
   color: 0x171515,
-  roughness: 0.9
+  roughness: 0.85
 });
 
 const red = new THREE.MeshStandardMaterial({
@@ -51,31 +59,33 @@ const red = new THREE.MeshStandardMaterial({
 
 const floorMat = new THREE.MeshStandardMaterial({
   color: 0x77716c,
-  roughness: 0.65
+  roughness: 0.8
 });
 
-// =====================================
+// ==========================================
 // LIGHTING
-// =====================================
+// ==========================================
 
-scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+scene.add(
+  new THREE.AmbientLight(0xffffff, 1.1)
+);
 
-const ceilingLight = new THREE.PointLight(
+const mainLight = new THREE.PointLight(
   0xffe8d1,
-  90,
+  100,
   25
 );
 
-ceilingLight.position.set(0, 4.5, 0);
-scene.add(ceilingLight);
+mainLight.position.set(0, 4.2, 0);
+scene.add(mainLight);
 
 function addSpot(x, z, targetX, targetZ) {
   const light = new THREE.SpotLight(
     0xffead6,
     100,
-    14,
+    15,
     Math.PI / 5,
-    0.5
+    0.6
   );
 
   light.position.set(x, 4.7, z);
@@ -85,15 +95,15 @@ function addSpot(x, z, targetX, targetZ) {
   scene.add(light.target);
 }
 
-addSpot(-4, 2, -4, 0);
-addSpot(0, 2, 0, -6);
-addSpot(4, 2, -2, -5);
-addSpot(-3, 2, 5, 0);
-addSpot(3, 2, 5, 0);
+addSpot(-4, 4, -4, 0);
+addSpot(0, 4, 0, -6);
+addSpot(4, 4, 3, -4);
+addSpot(-3, 4, 4, 0);
+addSpot(3, 4, 5, 0);
 
-// =====================================
-// ROOM STRUCTURE
-// =====================================
+// ==========================================
+// OBJECT CREATION
+// ==========================================
 
 function box(w, h, d, x, y, z, material) {
   const mesh = new THREE.Mesh(
@@ -106,64 +116,119 @@ function box(w, h, d, x, y, z, material) {
   mesh.receiveShadow = true;
 
   scene.add(mesh);
+
   return mesh;
 }
 
-// Floor
-box(14, 0.25, 18, 0, -0.13, 0, floorMat);
+// ==========================================
+// ROOM STRUCTURE
+// Room size: 14 x 18
+// ==========================================
 
-// Ceiling
-box(14, 0.25, 18, 0, 5, 0, white);
+// FLOOR
 
-// Back wall
-box(14, 5, 0.3, 0, 2.5, -9, white);
+box(
+  14, 0.25, 18,
+  0, -0.13, 0,
+  floorMat
+);
 
-// Front wall
-box(14, 5, 0.3, 0, 2.5, 9, white);
+// CEILING
 
-// Left wall
-box(0.3, 5, 18, -7, 2.5, 0, white);
+box(
+  14, 0.25, 18,
+  0, 5, 0,
+  white
+);
 
-// Right wall with opening for future room
-box(0.3, 5, 7, 7, 2.5, 5.5, white);
-box(0.3, 5, 6, 7, 2.5, -6, white);
-box(0.3, 1.5, 5, 7, 4.25, -2, white);
+// BACK WALL
 
-// =====================================
-// TEXTURE GENERATOR
-// =====================================
+box(
+  14, 5, 0.3,
+  0, 2.5, -9,
+  white
+);
 
-function makePoster(title, subtitle, bg, color, detail = '') {
+// FRONT WALL
+
+box(
+  14, 5, 0.3,
+  0, 2.5, 9,
+  white
+);
+
+// LEFT WALL
+
+box(
+  0.3, 5, 18,
+  -7, 2.5, 0,
+  white
+);
+
+// RIGHT WALL
+// Opening reserved for future Room 02
+
+box(
+  0.3, 5, 7,
+  7, 2.5, 5.5,
+  white
+);
+
+box(
+  0.3, 5, 6,
+  7, 2.5, -6,
+  white
+);
+
+box(
+  0.3, 1.5, 5,
+  7, 4.25, -2,
+  white
+);
+
+// ==========================================
+// POSTER GENERATOR
+// ==========================================
+
+function makePoster(
+  title,
+  subtitle,
+  background,
+  textColor,
+  detail = ''
+) {
   const canvas = document.createElement('canvas');
+
   canvas.width = 1024;
   canvas.height = 768;
 
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = bg;
+  ctx.fillStyle = background;
   ctx.fillRect(0, 0, 1024, 768);
 
-  ctx.fillStyle = color;
+  ctx.fillStyle = textColor;
   ctx.font = 'bold 76px Arial';
   ctx.fillText(title, 65, 160);
 
   ctx.fillStyle = '#a42b32';
   ctx.fillRect(65, 195, 250, 9);
 
-  ctx.fillStyle = color;
+  ctx.fillStyle = textColor;
   ctx.font = '42px Arial';
 
-  const words = subtitle.split('\n');
-  words.forEach((line, i) => {
-    ctx.fillText(line, 65, 300 + i * 75);
+  const lines = subtitle.split('\n');
+
+  lines.forEach((line, index) => {
+    ctx.fillText(line, 65, 300 + index * 75);
   });
 
   ctx.font = '28px Arial';
-  ctx.fillStyle = color;
   ctx.globalAlpha = 0.75;
   ctx.fillText(detail, 65, 650);
 
   const texture = new THREE.CanvasTexture(canvas);
+
   texture.colorSpace = THREE.SRGBColorSpace;
 
   return new THREE.MeshStandardMaterial({
@@ -173,13 +238,13 @@ function makePoster(title, subtitle, bg, color, detail = '') {
   });
 }
 
-// =====================================
-// EXHIBITION WALLS
-// =====================================
+// ==========================================
+// BACK WALL EXHIBITION
+// ==========================================
 
-// Main back wall
 const mainPoster = new THREE.Mesh(
   new THREE.PlaneGeometry(8.5, 4),
+
   makePoster(
     'HATE SPEECH',
     'คืออะไร?\n\nทั้งในโลกออนไลน์\nและความเป็นจริง',
@@ -190,11 +255,16 @@ const mainPoster = new THREE.Mesh(
 );
 
 mainPoster.position.set(0, 2.7, -8.82);
+
 scene.add(mainPoster);
 
-// Left wall
+// ==========================================
+// LEFT WALL EXHIBITION
+// ==========================================
+
 const leftPoster = new THREE.Mesh(
   new THREE.PlaneGeometry(4.5, 3.7),
+
   makePoster(
     'HATE SPEECH',
     'คือการใช้คำพูด\nที่สร้างความเกลียดชัง\nดูถูก หรือแบ่งแยกผู้อื่น',
@@ -205,11 +275,16 @@ const leftPoster = new THREE.Mesh(
 
 leftPoster.rotation.y = Math.PI / 2;
 leftPoster.position.set(-6.8, 2.7, 1);
+
 scene.add(leftPoster);
 
-// Right wall
+// ==========================================
+// RIGHT WALL EXHIBITION
+// ==========================================
+
 const rightPoster = new THREE.Mesh(
   new THREE.PlaneGeometry(4.5, 3.7),
+
   makePoster(
     'ผลกระทบ',
     'ทำร้ายจิตใจ\nสร้างความแตกแยก\nกระทบสังคม\nและความเท่าเทียม',
@@ -220,11 +295,14 @@ const rightPoster = new THREE.Mesh(
 
 rightPoster.rotation.y = -Math.PI / 2;
 rightPoster.position.set(6.8, 2.7, 2);
+
 scene.add(rightPoster);
 
-// Campaign poster
+// CAMPAIGN POSTER
+
 const campaign = new THREE.Mesh(
   new THREE.PlaneGeometry(4, 3),
+
   makePoster(
     'หยุด Hate Speech',
     'เริ่มได้จากเรา\n\nพูดอย่างเคารพ\nสร้างสังคมที่ดีกว่า',
@@ -235,24 +313,30 @@ const campaign = new THREE.Mesh(
 
 campaign.rotation.y = -Math.PI / 2;
 campaign.position.set(6.8, 2.6, -6);
+
 scene.add(campaign);
 
-// =====================================
+// ==========================================
 // DISPLAY PEDESTALS
-// =====================================
+// ==========================================
 
 function createPedestal(x, z, width = 1.3) {
-  box(width, 1.15, width, x, 0.58, z, black);
 
-  const top = new THREE.MeshStandardMaterial({
-    color: 0x252020,
-    roughness: 0.5
-  });
+  box(
+    width, 1.15, width,
+    x, 0.58, z,
+    black
+  );
 
-  box(width + 0.1, 0.08, width + 0.1, x, 1.2, z, top);
+  box(
+    width + 0.1, 0.08, width + 0.1,
+    x, 1.2, z,
+    black
+  );
 
   const artifact = new THREE.Mesh(
     new THREE.BoxGeometry(0.55, 0.8, 0.08),
+
     new THREE.MeshStandardMaterial({
       color: 0x333333,
       metalness: 0.3
@@ -260,6 +344,7 @@ function createPedestal(x, z, width = 1.3) {
   );
 
   artifact.position.set(x, 1.65, z);
+
   scene.add(artifact);
 }
 
@@ -267,14 +352,17 @@ createPedestal(0, -2, 1.4);
 createPedestal(-4.3, -1, 1.1);
 createPedestal(4.2, 2, 1.2);
 
-// =====================================
+// ==========================================
 // MEGAPHONE DISPLAY
-// =====================================
+// ==========================================
 
 const megaphone = new THREE.Group();
 
 const horn = new THREE.Mesh(
-  new THREE.CylinderGeometry(0.12, 0.65, 1.2, 32, 1, true),
+  new THREE.CylinderGeometry(
+    0.12, 0.65, 1.2, 32, 1, true
+  ),
+
   new THREE.MeshStandardMaterial({
     color: 0x333333,
     metalness: 0.5,
@@ -284,6 +372,7 @@ const horn = new THREE.Mesh(
 );
 
 horn.rotation.z = -Math.PI / 2;
+
 megaphone.add(horn);
 
 const handle = new THREE.Mesh(
@@ -292,15 +381,17 @@ const handle = new THREE.Mesh(
 );
 
 handle.position.set(0, -0.45, 0);
+
 megaphone.add(handle);
 
 megaphone.position.set(-2.5, 2, -8.1);
 megaphone.scale.set(1.3, 1.3, 1.3);
+
 scene.add(megaphone);
 
-// =====================================
+// ==========================================
 // CEILING TRACK LIGHTS
-// =====================================
+// ==========================================
 
 const trackMat = new THREE.MeshStandardMaterial({
   color: 0x222222,
@@ -311,92 +402,345 @@ box(0.08, 0.08, 15, -4.5, 4.75, 0, trackMat);
 box(0.08, 0.08, 15, 0, 4.75, 0, trackMat);
 box(0.08, 0.08, 15, 4.5, 4.75, 0, trackMat);
 
-// =====================================
-// INTERACTION
-// =====================================
+// ==========================================
+// USER INTERFACE
+// ==========================================
 
-const startButton = document.getElementById('start-button');
 const ui = document.getElementById('ui');
-const crosshair = document.getElementById('crosshair');
-const roomName = document.getElementById('room-name');
+const startButton = document.getElementById('start-button');
 
-const keys = {};
+const crosshair = document.getElementById('crosshair');
+const roomLabel = document.getElementById('room-label');
+
+const infoWindow = document.getElementById('exhibition-info');
+
+const mobileControls = document.getElementById('mobile-controls');
+
+const isTouchDevice =
+  window.matchMedia('(pointer: coarse)').matches;
+
+let isLocked = false;
 
 let yaw = 0;
 let pitch = 0;
-let isLocked = false;
 
-startButton.addEventListener('click', () => {
-  renderer.domElement.requestPointerLock();
-});
+const keys = {};
+
+// ==========================================
+// START GAME
+// ==========================================
+
+function enterExhibition() {
+
+  if (isTouchDevice) {
+
+    isLocked = true;
+
+    ui.style.display = 'none';
+    crosshair.style.display = 'block';
+    roomLabel.style.display = 'block';
+
+    mobileControls.style.display = 'block';
+
+  } else {
+
+    renderer.domElement.requestPointerLock();
+
+  }
+}
+
+startButton.addEventListener('click', enterExhibition);
+
+// ==========================================
+// DESKTOP POINTER LOCK
+// ==========================================
 
 document.addEventListener('pointerlockchange', () => {
-  isLocked = document.pointerLockElement === renderer.domElement;
+
+  if (isTouchDevice) return;
+
+  isLocked =
+    document.pointerLockElement === renderer.domElement;
 
   ui.style.display = isLocked ? 'none' : 'flex';
-  crosshair.style.display = isLocked ? 'block' : 'none';
+
+  crosshair.style.display =
+    isLocked ? 'block' : 'none';
+
+  roomLabel.style.display =
+    isLocked ? 'block' : 'none';
+
+  if (!isLocked) {
+    Object.keys(keys).forEach(key => keys[key] = false);
+  }
+
 });
 
+// ==========================================
+// DESKTOP MOUSE LOOK
+// ==========================================
+
 document.addEventListener('mousemove', (e) => {
-  if (!isLocked) return;
+
+  if (!isLocked || isTouchDevice) return;
 
   yaw -= e.movementX * 0.002;
   pitch -= e.movementY * 0.002;
 
-  pitch = Math.max(-1.4, Math.min(1.4, pitch));
+  pitch = THREE.MathUtils.clamp(
+    pitch, -1.4, 1.4
+  );
+
 });
 
+// ==========================================
+// KEYBOARD
+// ==========================================
+
 document.addEventListener('keydown', (e) => {
+
   keys[e.code] = true;
 
-  if (e.code === 'KeyE') {
+  if (e.code === 'KeyE' && isLocked) {
     showExhibitionInfo();
   }
+
 });
 
 document.addEventListener('keyup', (e) => {
   keys[e.code] = false;
 });
 
-// =====================================
-// EXHIBITION INFORMATION
-// =====================================
+// ==========================================
+// INFORMATION WINDOW
+// ==========================================
 
 function showExhibitionInfo() {
-  const info = document.getElementById('exhibition-info');
 
-  if (info) {
-    info.style.display =
-      info.style.display === 'block' ? 'none' : 'block';
-  }
+  const visible =
+    infoWindow.style.display === 'flex';
+
+  infoWindow.style.display =
+    visible ? 'none' : 'flex';
+
 }
 
-const info = document.createElement('div');
-info.id = 'exhibition-info';
+document.getElementById('close-info')
+  .addEventListener('click', () => {
 
-info.innerHTML = `
-  <h2>HATE SPEECH</h2>
-  <p>คำพูดที่สร้างความเกลียดชัง
-  ดูถูก หรือแบ่งแยกผู้อื่น</p>
-  <p>เรียนรู้ผลกระทบของคำพูด
-  ทั้งในโลกออนไลน์และชีวิตจริง</p>
-  <button id="close-info">ปิด</button>
-`;
+    infoWindow.style.display = 'none';
 
-document.body.appendChild(info);
+  });
 
-document.getElementById('close-info').onclick = () => {
-  info.style.display = 'none';
-};
+// ==========================================
+// MOBILE CONTROLS
+// ==========================================
 
-// =====================================
+const joystick = document.getElementById('joystick');
+const knob = document.getElementById('joystick-knob');
+
+const lookZone = document.getElementById('look-zone');
+
+let moveX = 0;
+let moveY = 0;
+
+let joystickPointer = null;
+let lookPointer = null;
+
+let lookX = 0;
+let lookY = 0;
+
+// RESET JOYSTICK
+
+function resetJoystick() {
+
+  moveX = 0;
+  moveY = 0;
+
+  knob.style.transform =
+    'translate(-50%, -50%)';
+
+}
+
+// JOYSTICK START
+
+joystick.addEventListener('pointerdown', (e) => {
+
+  if (!isTouchDevice || !isLocked) return;
+
+  e.preventDefault();
+
+  joystickPointer = e.pointerId;
+
+  joystick.setPointerCapture(e.pointerId);
+
+  updateJoystick(e);
+
+});
+
+// JOYSTICK MOVE
+
+joystick.addEventListener('pointermove', (e) => {
+
+  if (e.pointerId !== joystickPointer) return;
+
+  updateJoystick(e);
+
+});
+
+function updateJoystick(e) {
+
+  const rect = joystick.getBoundingClientRect();
+
+  let dx =
+    e.clientX - (rect.left + rect.width / 2);
+
+  let dy =
+    e.clientY - (rect.top + rect.height / 2);
+
+  const maxDistance = 42;
+
+  const distance = Math.hypot(dx, dy);
+
+  if (distance > maxDistance) {
+
+    dx = dx / distance * maxDistance;
+    dy = dy / distance * maxDistance;
+
+  }
+
+  moveX = dx / maxDistance;
+  moveY = dy / maxDistance;
+
+  knob.style.transform =
+    `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;
+
+}
+
+// JOYSTICK END
+
+function endJoystick(e) {
+
+  if (e.pointerId !== joystickPointer) return;
+
+  joystickPointer = null;
+
+  resetJoystick();
+
+}
+
+joystick.addEventListener('pointerup', endJoystick);
+joystick.addEventListener('pointercancel', endJoystick);
+
+// ==========================================
+// TOUCH LOOK
+// ==========================================
+
+lookZone.addEventListener('pointerdown', (e) => {
+
+  if (!isTouchDevice || !isLocked) return;
+
+  if (lookPointer !== null) return;
+
+  lookPointer = e.pointerId;
+
+  lookX = e.clientX;
+  lookY = e.clientY;
+
+  lookZone.setPointerCapture(e.pointerId);
+
+});
+
+lookZone.addEventListener('pointermove', (e) => {
+
+  if (e.pointerId !== lookPointer) return;
+
+  const dx = e.clientX - lookX;
+  const dy = e.clientY - lookY;
+
+  yaw -= dx * 0.005;
+  pitch -= dy * 0.005;
+
+  pitch = THREE.MathUtils.clamp(
+    pitch, -1.4, 1.4
+  );
+
+  lookX = e.clientX;
+  lookY = e.clientY;
+
+});
+
+function endLook(e) {
+
+  if (e.pointerId !== lookPointer) return;
+
+  lookPointer = null;
+
+}
+
+lookZone.addEventListener('pointerup', endLook);
+lookZone.addEventListener('pointercancel', endLook);
+
+// ==========================================
+// MOBILE INTERACTION
+// ==========================================
+
+document.getElementById('interact-button')
+  .addEventListener('pointerdown', (e) => {
+
+    e.preventDefault();
+
+    if (isLocked) {
+      showExhibitionInfo();
+    }
+
+  });
+
+// ==========================================
+// EXIT
+// ==========================================
+
+function exitExhibition() {
+
+  if (isTouchDevice) {
+
+    isLocked = false;
+
+    mobileControls.style.display = 'none';
+
+    resetJoystick();
+
+    lookPointer = null;
+    joystickPointer = null;
+
+    infoWindow.style.display = 'none';
+
+    ui.style.display = 'flex';
+    crosshair.style.display = 'none';
+    roomLabel.style.display = 'none';
+
+  } else {
+
+    document.exitPointerLock();
+
+  }
+
+}
+
+document.getElementById('mobile-exit')
+  .addEventListener('click', exitExhibition);
+
+// ==========================================
 // MOVEMENT
-// =====================================
+// ==========================================
 
 const clock = new THREE.Clock();
 
 function updateMovement(delta) {
+
   if (!isLocked) return;
+
+  if (infoWindow.style.display === 'flex') return;
 
   const speed = 4 * delta;
 
@@ -414,61 +758,97 @@ function updateMovement(delta) {
 
   const movement = new THREE.Vector3();
 
+  // KEYBOARD
+
   if (keys['KeyW']) movement.add(forward);
   if (keys['KeyS']) movement.sub(forward);
+
   if (keys['KeyD']) movement.add(right);
   if (keys['KeyA']) movement.sub(right);
 
+  // MOBILE JOYSTICK
+
+  movement.addScaledVector(forward, -moveY);
+  movement.addScaledVector(right, moveX);
+
   if (movement.length() > 0) {
+
     movement.normalize().multiplyScalar(speed);
+
   }
 
   camera.position.x += movement.x;
   camera.position.z += movement.z;
 
-  // Room boundaries
+  // ROOM BOUNDARIES
+
   camera.position.x = THREE.MathUtils.clamp(
-    camera.position.x, -6.2, 6.2
+    camera.position.x,
+    -6.2,
+    6.2
   );
 
   camera.position.z = THREE.MathUtils.clamp(
-    camera.position.z, -8.1, 8.1
+    camera.position.z,
+    -8.1,
+    8.1
   );
 
   camera.position.y = 1.65;
+
 }
 
-// =====================================
+// ==========================================
 // ANIMATION
-// =====================================
+// ==========================================
 
 function animate() {
+
   requestAnimationFrame(animate);
 
-  const delta = Math.min(clock.getDelta(), 0.05);
+  const delta = Math.min(
+    clock.getDelta(),
+    0.05
+  );
 
   updateMovement(delta);
 
   camera.rotation.order = 'YXZ';
+
   camera.rotation.y = yaw;
   camera.rotation.x = pitch;
 
   renderer.render(scene, camera);
+
 }
 
 animate();
 
-// =====================================
+// ==========================================
 // RESPONSIVE
-// =====================================
+// ==========================================
 
 window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
+
+  camera.aspect =
+    window.innerWidth / window.innerHeight;
+
   camera.updateProjectionMatrix();
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(
+    window.innerWidth,
+    window.innerHeight
+  );
+
+  renderer.setPixelRatio(
+    Math.min(window.devicePixelRatio, 1.5)
+  );
+
 });
+
+// ==========================================
+// FINISH LOADING
+// ==========================================
 
 document.getElementById('loading').style.display = 'none';
 
-roomName.textContent = 'ROOM 01 — HATE SPEECH';
